@@ -24,22 +24,13 @@ public class Task24 {
 		
 		int originalNum = num;
 		int result = 0;
-		int count  = 10;  // counts decimal signs
-		
-		// Determine how many decimal signs the number has
-		while (num > 10) {
-			num /= 10;
-			if (num > 9) {
-				count *= 10;
-			}
-		}
 		
 		num = originalNum; // returning original value
 		
 		do {
-			result += count * (num % 10);
-			num /= 10;
-			count /= 10;			
+			result *= 10;
+			result += (num % 10);
+			num /= 10;		
 		} while (num > 0);
 		
 		System.out.println(result); // the original number in backwards 
