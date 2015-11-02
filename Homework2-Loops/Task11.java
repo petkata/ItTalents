@@ -35,6 +35,31 @@ public class Task11 {
 			}
 			System.out.println();
 		}
+		
+		//This is for the hollow triangles		
+		for (int i = 1; i <= height; i++) {			
+			if (i == height) {
+				//printing '*' for the last line
+				for (int p = 0; p <  (2 * i - 1); p++) {
+					System.out.print("*");
+				}
+				break;
+			}					
+			for (int k = height - i; k > 0 ; k--) {
+				System.out.print(" ");
+			}
+			for (int j = 1; j <= (2 * i - 1); j++) {
+				//Check if the pointer is at the frame of the triangle
+				if (j == 1 || j == (2* i - 1)) {
+					// Prints the frame of the triangle
+					System.out.print("*");
+				} else {
+					//Prints the inside of the triangle
+					System.out.print(" ");
+				}				
+			}
+			System.out.println();
+		}
 	}
 
 }
