@@ -32,6 +32,34 @@ public class Task8 {
 		}
 		sc.close();
 		
+		// Just for tests
+		//int[] arr = {0,1,1,1,1,4,2,5,5,5,33,33}; 
 		
+		int count = 1; 
+		int secondCounter = 1; // used for comparing sequence lengths
+		int index = 0; // position of the last member of the longest sequence in the array
+		
+		for (int i = 1; i < arr.length; i++) {
+			
+			if (arr[i] == arr[i-1]) {
+				count++;
+			}else if (arr[i] != arr[i-1] ) {
+				if (secondCounter <= count) {
+					secondCounter = count;
+				}
+				count = 1;
+			}
+			if (secondCounter <= count) {
+				index = i;
+			}
+		}
+
+		int maxSeq = (count > secondCounter)? count : secondCounter;
+		
+		System.out.print("The length of the longest sequence is " + maxSeq);
+		System.out.println(" and starts at index " + (index - maxSeq + 1));
+		for (int i = index - maxSeq + 1; i <= index; i++) {
+			System.out.print(arr[i] + " ");
+		}
 	}
 }
