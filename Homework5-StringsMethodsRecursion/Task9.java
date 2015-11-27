@@ -23,6 +23,7 @@ public class Task9 {
 			if (strArr[i].length() <2 && strArr[i].contains("-")) {
 				continue;
 			}
+			System.out.println(strArr[i]);
 			sumStr += Integer.parseInt(strArr[i]);
 		}
 		System.out.println("The sum is: " + sumStr);
