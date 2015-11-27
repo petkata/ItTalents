@@ -20,7 +20,9 @@ public class Task9 {
 	private static void calculateSumOFNumbersInString(String[] strArr) {
 		int sumStr = 0;
 		for (int i = 0; i < strArr.length; i++) {
-			sumStr += Integer.parseInt(strArr[i]);
+			if (strArr[i].charAt(0) != '-') {
+				sumStr += Integer.parseInt(strArr[i]);
+			}
 		}
 		System.out.println("The sum is: " + sumStr);
 	}
