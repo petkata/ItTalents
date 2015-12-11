@@ -1,20 +1,55 @@
+package computerStore;
 
 public class Computer {
 	
-	String model;
+	private String model;
 	// manufacture year
-	short year;
+	private short year;
 	// price in dollars
-	double price;
-	boolean isNotebook;
+	private double price;
+	private boolean isNotebook;
 	// hard disk capacity in MB
-	int hardDiskMemory;
+	private double hardDiskMemory;
 	// available RAM in MB
-	int freeMemory;
-	String operationSystem;
+	private double freeMemory;
+	private String operationSystem;
+	
+	Computer(){
+		this.isNotebook = false;
+		this.operationSystem = "Win XP";
+	}
+	Computer(int year, double price, double hardDiskMemory, double freeMemory){
+		this();
+		this.year = (short) year;
+		this.price = price;
+		this.hardDiskMemory = hardDiskMemory;
+		this.freeMemory = freeMemory;
+	}
+	Computer(int year, double price,boolean isNotebook, double hardDiskMemory, double freeMemory,String operationSystem){
+		this.year = (short) year;
+		this.price = price;
+		this.isNotebook = isNotebook;
+		this.hardDiskMemory = hardDiskMemory;
+		this.freeMemory = freeMemory;
+		this.operationSystem = operationSystem;
+	}
+	
+	int comparePrice(Computer computerToCompare){
+		if (this.price > computerToCompare.price) {
+			return -1;
+		} 
+		else if(this.price < computerToCompare.price){
+			return 1;
+		}
+		else {
+			return 0;
+		}
+		
+	}
 	
 	String changeOperationSystem(String newOperationSystem){
 		switch (newOperationSystem) {
+		case "Win XP":
 		case "Windows":
 		case "Linux":
 		case "OS X":
