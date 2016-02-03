@@ -54,9 +54,11 @@ public class Person {
 		creditType.setPeriod(period);
 		creditType.setAvailableMoney(creditMoney);
 		this.clientBankProducts.put(creditType, creditMoney);
-		//TODO set give credit to boolean
-		bank.giveCreditToClient(this, creditType, creditMoney, period);
-		this.currentMoney += creditMoney;
+		if (bank.giveCreditToClient(this, creditType, creditMoney, period)) {
+			this.currentMoney += creditMoney;
+			return;
+		}
+		
 	}
 	
 	public double creditsTotalTax(){

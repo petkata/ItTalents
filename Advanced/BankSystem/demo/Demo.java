@@ -12,6 +12,8 @@ public class Demo {
 
 	public static void main(String[] args) {
 		
+		
+		
 		Bank bank= Bank.getInstance("OBB", "Sofiq", 10_000);
 		
 		ArrayList<Person> clients = generateClients();
@@ -30,7 +32,10 @@ public class Demo {
 		
 		System.out.println("\n-------After credit-------\n");
 		
-		drawCredit(bank, clients, 1500, 6);
+		
+		
+		drawCredit(bank, clients);
+//		drawCredit(bank, clients, 1500, 6);
 		
 //		System.out.println(clients.get(2));
 //		clients.get(2).drawCredit(bank, consumerCredit, 2000, 5);
@@ -68,7 +73,7 @@ public class Demo {
 		}
 	}
 
-	static void drawCredit(Bank bank, ArrayList<Person> clients,double creditAmount, int period){
+	static void drawCredit(Bank bank, ArrayList<Person> clients){   //,double creditAmount, int period){
 		
 		for (Person client : clients) {
 			Credit homeCredit = new Credit("Home Credit", 6);
@@ -77,8 +82,10 @@ public class Demo {
 			client.drawCredit(
 					bank, 
 					credits[RandomGenerator.numberGenerator(credits.length)],
-					creditAmount,
-					period
+					RandomGenerator.moneyGenerator(), 
+					RandomGenerator.numberGenerator(12)
+//					creditAmount,
+//					period
 					);
 		}
 	}

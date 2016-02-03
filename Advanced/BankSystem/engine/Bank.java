@@ -23,7 +23,6 @@ public class Bank {
 		Bank.bankName = bankName;
 		Bank.bankAddress = bankAddress;
 		Bank.bankFunds = bankFunds;
-//		Bank.bankReserve = 0.1*bankFunds;
 		Bank.bankProducts = new HashMap<>();
 		return instance;
 	}
@@ -37,8 +36,7 @@ public class Bank {
 		bankReserve += 0.9*moneyToDeposit;
 	}
 	
-	//TODO set it to boolean
-	void giveCreditToClient(Person client,Credit creditType, double creditMoney, int period){
+	boolean giveCreditToClient(Person client,Credit creditType, double creditMoney, int period){
 		if (!bankProducts.containsKey(client)) {
 			bankProducts.put(client, new HashMap<>());
 		}
@@ -46,19 +44,19 @@ public class Bank {
 			if (p.equals(client)) {
 				if (Bank.bankReserve < creditMoney ||(Bank.bankFunds - creditMoney) < Bank.bankReserve) {
 					System.out.println("----Insufficient money in bank reserve!");
-					return;
+					return false;
 				}
 				if (p.creditsTotalTax() < p.getSalary()/2) {
 					bankProducts.get(client).put(creditType, creditMoney);
 					bankFunds -= creditMoney;
 					System.out.println("Take this credit " + p.getName());
-					return;
+					return true;
 				}
 				System.out.println(p.getName() + " doesn't have enough money to pay monthly tax");
-				return;
+				return false;
 			}
 		}
-		
+		return false;
 	}
 	
 	//TEST
@@ -77,6 +75,6 @@ public class Bank {
 	
 	@Override
 	public String toString() {
-		return Bank.bankName + " " + bankAddress + " Reserve: " + FormatMoney.FromatMoney(bankReserve) + " Bank Funds:" + FormatMoney.FromatMoney(bankFunds);
+		return "Bank name: "+Bank.bankName + " -- Bank address: " + bankAddress + " -- Reserve: " + FormatMoney.FromatMoney(bankReserve) + " -- Bank Funds:" + FormatMoney.FromatMoney(bankFunds);
 	}
 }

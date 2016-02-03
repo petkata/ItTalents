@@ -21,7 +21,6 @@ public class Credit extends BankProduct{
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return super.toString() + " -- Period: " + this.period +"m" + " -- Month tax: " + FormatMoney.FromatMoney(monthTax) ;
 	}
 	
