@@ -235,7 +235,13 @@ public class Library {
 			
 
 			rentByTime(personName, itemName);
-			System.out.println(logOfRentNow.size());
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					timerItem(itemName);;
+				}
+			}).start();
 			
 			System.out.println(personName + " took: " + itemToRent + " at " + itemToRent.getTimeOfTake());
 		}
@@ -247,7 +253,7 @@ public class Library {
 				for (Entry<LocalTime, Map<String, List<Item>>> e : logOfRentNow.entrySet()) {
 					for (Entry<String, List<Item>> person : e.getValue().entrySet()) {
 						for (Item item : person.getValue()) {
-							if (item.isRent() && Duration.between(item.getTimeOfTake().plusSeconds(8), LocalTime.now()).toMillis() > 800 ) {
+							if (item.isRent() && Duration.between(item.getTimeOfTake().plusSeconds(8), LocalTime.now()).toMillis() > 8000 ) {
 //								try {
 //									Thread.sleep(1000);
 //								} catch (InterruptedException e1) {
@@ -266,6 +272,21 @@ public class Library {
 		}
 	}
 
+	public void timerItem(String name){
+		while(true){
+		Item item = findItemByName(name);
+		if (item.isRent() && Duration.between(item.getTimeOfTake().plusSeconds(3), LocalTime.now()).toMillis() > 3000 ) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			item.setTotalTax((2.0*0.01));
+			System.out.println(item.getTotalTax());
+		}
+		}
+	}
+	
 	public void returnItem(String personName,String itemName){
 		
 		Item returnedItem = findItemByName(itemName);
