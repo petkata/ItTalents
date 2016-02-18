@@ -25,6 +25,12 @@ public class Book extends Item{
 	protected String getGenre() {
 		return genre;
 	}
+	
+	@Override
+	protected double getTotalTax() {
+		// TODO Auto-generated method stub
+		return super.getTotalTax() + BOOK_TAX;
+	}
 
 
 

@@ -21,7 +21,10 @@ public class Textbook extends Item{
 		return topic;
 	}
 
-
+	@Override
+	protected double getTotalTax() {
+		return super.getTotalTax() + TEXTBOOK_TAX;
+	}
 
 	@Override
 	public String toString() {

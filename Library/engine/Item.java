@@ -6,23 +6,21 @@ import java.util.Stack;
 public class Item {
 
 	private String name;
-	
+
 	private boolean isRent;
-	
+
 	private double totalTax;
 
 	public Item(String name) {
 		this.name = name;
 	}
 
-	public String getName(){
+	public String getName() {
 		return this.name;
 	}
-	
+
 	private Stack<LocalTime> timeOfTake = new Stack<>();
 	private Stack<LocalTime> timeOfreturn = new Stack<>();
-
-
 
 	protected LocalTime getTimeOfTake() {
 		return timeOfTake.peek();
@@ -55,10 +53,14 @@ public class Item {
 	protected void setTotalTax(double totalTax) {
 		this.totalTax += totalTax;
 	}
-	
+
+	protected void resetTax() {
+		this.totalTax = 0;
+	}
+
 	@Override
 	public String toString() {
-		return "TOtal tax " +this.totalTax + " ";
+		return "Total tax " + this.getTotalTax() + " ";
 	}
-	
+
 }
