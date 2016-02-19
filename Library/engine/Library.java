@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,8 +27,6 @@ public class Library {
 	private Map<String, Map<Item, Map<LocalTime, LocalTime>>> rentItems;
 
 	private Map<LocalTime, Map<String, List<Item>>> logOfRentNow;
-
-	// TODO Make a person
 
 	public Library() {
 
@@ -195,7 +194,7 @@ public class Library {
 
 		Item itemToRent = findItemByName(itemName);
 		if (itemToRent != null && !itemToRent.isRent()) {
-			
+
 			if (itemToRent instanceof Magazine) {
 				System.out.println("You cant rent magazines!");
 				return;
@@ -204,25 +203,23 @@ public class Library {
 			if (!rentItems.keySet().contains(personName)) {
 				rentItems.put(personName, new HashMap<>());
 			}
-			if (!rentItems.get(personName).keySet().contains(findItemByName(itemName))) {
-				rentItems.get(personName).put(findItemByName(itemName), new TreeMap<>());
+			if (!rentItems.get(personName).keySet().contains(itemToRent)) {
+				rentItems.get(personName).put(itemToRent, new TreeMap<>());
 			}
 
 			if (itemToRent instanceof Book) {
-				rentItems.get(personName).get(findItemByName(itemName)).put(LocalTime.now(),
-						LocalTime.now().plusSeconds(300));
+				rentItems.get(personName).get(itemToRent).put(LocalTime.now(), LocalTime.now().plusSeconds(300));
 			}
 			if (itemToRent instanceof Textbook) {
-				rentItems.get(personName).get(findItemByName(itemName)).put(LocalTime.now(),
-						LocalTime.now().plusSeconds(150));
+				rentItems.get(personName).get(itemToRent).put(LocalTime.now(), LocalTime.now().plusSeconds(150));
 			}
 
-			findItemByName(itemName).setTimeOfTake(LocalTime.now());
+			itemToRent.setTimeOfTake(LocalTime.now());
 
-			findItemByName(itemName).setRent(true);
+			itemToRent.setRent(true);
 
 			rentByTime(personName, itemName);
-			
+
 			new Thread(new Runnable() {
 
 				@Override
@@ -232,32 +229,27 @@ public class Library {
 			}).start();
 
 			System.out.println(personName + " took: " + itemToRent + " at " + itemToRent.getTimeOfTake());
-
 		}
 	}
 
-	
-	// Scheduled
+	// Scheduler
 	public void timerItem(Item itemToRent) {
 		while (true) {
 			Item item = itemToRent;
 			int expireTime = 0;
 			if (item instanceof Book)
-				expireTime = 3; // 300
+				expireTime = 3; // 300 for test it is to 3 seconds
 			else
-				expireTime = 1; // 150
-			if (item.isRent()
+				expireTime = 1; // 150 for test it is to 1 second
+			if (itemToRent.isRent()
 					&& Duration.between(item.getTimeOfTake().plusSeconds(expireTime), LocalTime.now()).toMillis() > 0) {
-				
-				System.out.println(item.getTotalTax() + "  " + item.getName() +  "    " + LocalTime.now());
-				
-				
-				if (item instanceof Book) {
+
+				if (itemToRent.isRent() && item instanceof Book) {
 					item.setTotalTax((2.0 * 0.01));
-				} else {
+				}
+				if (itemToRent.isRent() && item instanceof Textbook) {
 					item.setTotalTax(3.0 * 0.01);
 				}
-				
 			}
 			try {
 				Thread.sleep(1000);
@@ -270,6 +262,10 @@ public class Library {
 	public void returnItem(String personName, String itemName) {
 
 		Item returnedItem = findItemByName(itemName);
+		
+		if (returnedItem.getTimeOfTake() == null) {
+			return;
+		}
 		logOfRentNow.remove(returnedItem.getTimeOfTake());
 		findItemByName(itemName).setRent(false);
 		findItemByName(itemName).setTimeOfreturn(LocalTime.now());
@@ -278,23 +274,16 @@ public class Library {
 		findItemByName(itemName).resetTax();
 		
 		if (returnedItem != null) {
+			for (Map<Item, Map<LocalTime, LocalTime>> e : rentItems.values()) {
 
-			// private Map<String, Map<Item, Map<LocalTime, LocalTime>>>
-			// rentItems;
-			for (Entry<String, Map<Item, Map<LocalTime, LocalTime>>> e : rentItems.entrySet()) {
-				for (Item item : e.getValue().keySet()) {
-					if (item.getName().equalsIgnoreCase(itemName)) {
-
-						rentItems.remove(e.getKey());
+				for (Item item : e.keySet()) {
+					if (item.getName().equals(itemName)) {
+						e.remove(item);
 					}
 				}
-//				if (e.getKey().isEmpty()) {
-//					rentItems.remove(e.getKey());
-//				}
 			}
-			// rentItems.get(personName).remove(returnedItem);
 		}
-		
+
 	}
 
 	private Item findItemByName(String name) {
@@ -310,14 +299,13 @@ public class Library {
 	}
 
 	public int quantityOfRentItems() {
-		int countRentItems = 0;
 
-		for (Map<Item, Map<LocalTime, LocalTime>> items : rentItems.values()) {
-			countRentItems += items.size();
+		int countRentItems = 0;
+		for (Entry<String, Map<Item, Map<LocalTime, LocalTime>>> e : rentItems.entrySet()) {
+			countRentItems += e.getValue().size();
 		}
 
 		System.out.println("Qunaity of rent items: " + countRentItems);
-
 		return countRentItems;
 	}
 
@@ -356,7 +344,7 @@ public class Library {
 	}
 
 	public void generateRentItemsLog() {
-		File rentLog = new File("." + File.separator + "src" + File.separator + "rentItemsLog.log");
+		File rentLog = new File("." + File.separator + "src" + File.separator + "Rent items.log");
 		if (!rentLog.exists()) {
 			try {
 				rentLog.createNewFile();
@@ -369,38 +357,71 @@ public class Library {
 				Writer writeLog = new BufferedWriter(new OutputStreamWriter(logStream))) {
 			String newLine = System.getProperty("line.separator");
 
-			writeLog.write("Total items rent: " + logOfRentNow.size() + newLine);
-
+			writeLog.write("Total items rent: " + quantityOfRentItems() + newLine);
 			for (Entry<LocalTime, Map<String, List<Item>>> e : logOfRentNow.entrySet()) {
-				writeLog.append("At " + e.getKey().toString() + " : ");
 				for (Entry<String, List<Item>> subEn : e.getValue().entrySet()) {
-					writeLog.append(subEn.getKey() + " rent: ");
 					for (Item item : subEn.getValue()) {
-						if (item.isRent()) {
-							writeLog.append(item + newLine);
-						}
+						writeLog.append(newLine + "At " + e.getKey().toString() + " : ");
+						writeLog.append(subEn.getKey() + " rent: ");
+						writeLog.append(item.getName());
 					}
 				}
 			}
-			writeLog.write("Time of log: " +  LocalTime.now());
-			System.out.println("Write successful at " + LocalTime.now());
+			writeLog.write(newLine + "Time of log: " + LocalTime.now());
+			System.out.println("Rent items log updated successful at successfully at " + LocalTime.now());
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
 	}
 
 	public void generateExpiredLog() {
+		double totalExpiredTax = 0;
+		Map<Double,Map<Item, String>> taxes = new TreeMap<>(Collections.reverseOrder());
+		
+		for (Entry<LocalTime, Map<String, List<Item>>> e : logOfRentNow.entrySet()) {
+			for (Entry<String, List<Item>> subEn : e.getValue().entrySet()) {
+				for (Item item : subEn.getValue()) {
+					if (!taxes.keySet().contains(item.getTotalTax())) {
+						taxes.put(item.getTotalTax(), new HashMap<>());
+					}
+					taxes.get(item.getTotalTax()).put(item, subEn.getKey());
+					totalExpiredTax += item.getTotalTax();
+				}
+			}
+		}
+		File expiredBooks = new File("." + File.separator + "src" + File.separator + "Expired Books.log");
+		if (!expiredBooks.exists()) {
+			try {
+				expiredBooks.createNewFile();
+			} catch (IOException e) {
+				System.err.println("Log could NOT be created");
+				e.printStackTrace();
+			}
+		}
+		try (OutputStream logStream = new FileOutputStream(expiredBooks);
+				Writer writeLog = new BufferedWriter(new OutputStreamWriter(logStream))) {
+			String newLine = System.getProperty("line.separator");
 
+			for (Entry<Double, Map<Item, String>> e : taxes.entrySet()) {
+				for (Entry<Item, String> subEn : e.getValue().entrySet()) {
+					writeLog.append("Title: " + subEn.getKey().getName() + " --- User: " + subEn.getValue() + " --- Tax to pay: " + e.getKey() + newLine);
+				}
+			}
+			writeLog.write(newLine + "Total tax form expired items: " + totalExpiredTax);
+			writeLog.write(newLine + "Time of log: " + LocalTime.now());
+			System.out.println("Expired Books log updated successfully at " + LocalTime.now());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public void revision() {
-		this.quantityOfRentItems();
 		this.generateRentItemsLog();
+		this.generateExpiredLog();
 	}
 
 }

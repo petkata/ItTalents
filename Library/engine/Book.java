@@ -36,7 +36,7 @@ public class Book extends Item{
 
 	@Override
 	public String toString() {
-		return super.toString() + this.author + " " + super.getName() + "(" + this.genre + ") Date of publish: " + this.dateOFPublish; 
+		return super.toString() + " Date of publish: " + this.dateOFPublish; 
 	}
 	
 	

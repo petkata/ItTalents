@@ -23,6 +23,11 @@ public class Item {
 	private Stack<LocalTime> timeOfreturn = new Stack<>();
 
 	protected LocalTime getTimeOfTake() {
+		
+		if (timeOfTake.isEmpty()) {
+			return null;
+		}
+		
 		return timeOfTake.peek();
 	}
 
@@ -60,7 +65,7 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Total tax " + this.getTotalTax() + " ";
+		return this.getName();
 	}
 
 }

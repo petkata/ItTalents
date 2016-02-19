@@ -13,29 +13,48 @@ public class Demo {
 
 		Library lib = new Library();
 
-		// new Thread(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// lib.rentTimer();
-		// }
-		// }).start();
+//		 lib.showAll();
+//		System.out.println("\n---------------------------\n");
+//		lib.showCategory("Book");
+//		System.out.println("\n---------------------------\n");
+//		lib.showCategory("textBook");
+//		System.out.println("\n---------------------------\n");
+//		lib.showCategory("Magazine");
+//		System.out.println("\n-------------RENT--------------\n");
+//
+//
+//		 lib.rentItem("Shefa","Book1");
+//
+//		 lib.rentItem("Gosho","body");
+//
+//		 lib.rentItem("Gosho","Book2");
+//
+//		 lib.rentItem("Maks","Mag 1");
+//		System.out.println("\n---------------------------\n");
+//
+//		 lib.quantityOfRentItems();
+//		 lib.showRentItems();
+//
+//		System.out.println("\n-------------RETURNED--------------\n");
+//
+//			lib.returnItem("Shefa","Book1");
+//		
+//		System.out.println("\n---------------------------\n");
+//		 lib.quantityOfRentItems();
+//		 lib.showRentItems();
+//		 lib.showCategory("Book");
+//		 lib.showCategory("textBook");
+//		 
 
-		// lib.showAll();
-		System.out.println("\n---------------------------\n");
-		lib.showCategory("Book");
-		System.out.println("\n---------------------------\n");
-		lib.showCategory("textBook");
-		System.out.println("\n---------------------------\n");
-		lib.showCategory("Magazine");
-		System.out.println("\n-------------RENT--------------\n");
+//		System.out.println("\n------------THREADS---------------\n");
 
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				lib.rentItem("Gosho", "Book1");
-				// lib.timerItem("Book1");
+
+				lib.rentItem("Gosho", "Book5");
 			}
 		}).start();
 
@@ -45,51 +64,27 @@ public class Demo {
 			public void run() {
 				lib.rentItem("Drugiq", "body");
 
-				// lib.timerItem("body");
 			}
 		}).start();
-		// new Thread(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// lib.rentItem("Shefa", "Book6");
-		//
-		//// lib.timerItem("Book6");
-		// }
-		// }).start();
-		// new Thread(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// lib.rentItem("Gosho", "Prime numbers in math");
-		//
-		//// lib.timerItem("Prime numbers in math");
-		// }
-		// }).start();
+		 new Thread(new Runnable() {
+		
+		 @Override
+		 public void run() {
+		 lib.rentItem("Shefa", "Book6");
+		
+		 }
+		 }).start();
+		 new Thread(new Runnable() {
+		
+		 @Override
+		 public void run() {
+		 lib.rentItem("Gosho", "Prime numbers in math");
+		
+		 }
+		 }).start();
 
-		System.out.println("\n---------------------------\n");
-
-		// lib.quantityOfRentItems();
-		// lib.showRentItems();
-
-		System.out.println("\n-------------RETURNED--------------\n");
-
-		// lib.returnItem("Shefa","Book1");
-		System.out.println("\n---------------------------\n");
-		// lib.quantityOfRentItems();
-		// lib.showRentItems();
-		// try {
-		// Thread.sleep(4000);
-		// lib.returnItem("Drugiq","body");
-		// lib.showCategory("Book");
-		// lib.showCategory("textBook");
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		System.out.println("\n---------------------------\n");
-
+//		 System.out.println("\n------------SCHEDLUED THREADS---------------\n");
+		
 		ScheduledExecutorService scheduledExit = Executors.newScheduledThreadPool(3);
 		//
 		
@@ -112,15 +107,6 @@ public class Demo {
 			}
 		}, 8, SECONDS);
 
-		ScheduledFuture<?> rent3 = scheduledExit.schedule(new Runnable() {
-
-			@Override
-			public void run() {
-
-				lib.rentItem("Gosho", "Book1");
-			}
-		}, 9, SECONDS);
-
 		//
 		ScheduledFuture<?> revision = scheduledExit.scheduleWithFixedDelay(new Runnable() {
 
@@ -128,14 +114,7 @@ public class Demo {
 			public void run() {
 				lib.revision();
 			}
-		}, 15, 15, SECONDS);
-
-		/*
-		 * lib.availableItems();
-		 * 
-		 * lib.generateRentItemsLog();
-		 * 
-		 */
+		}, 15, 15, SECONDS); // revision is made every 15 seconds 
 	}
 
 }

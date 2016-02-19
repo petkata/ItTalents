@@ -26,9 +26,9 @@ public class Textbook extends Item{
 		return super.getTotalTax() + TEXTBOOK_TAX;
 	}
 
-	@Override
-	public String toString() {
-		return super.toString() +  super.getName();
-	}
+//	@Override
+//	public String toString() {
+//		return super.toString() +  super.getName();
+//	}
 	
 }
